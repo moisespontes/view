@@ -60,7 +60,7 @@ $render = new \DevPontes\View\View('assets', $options);
 
 ##### There are just two methods to do all the work. You just need to call ***addAssets*** to set the JS and CSS assets, or just ***render*** to render the selected View. You can omit the ***add Assets*** if the assets are inserted in the template itself, see
 
-3. São apenas dois métodos para fazer todo o trabalho. Você só precisa chamar o ***addAssets*** para definir os ativos de JS e CSS, ou o somente o ***render*** para renderizar a View selecionada. Você pode omitir o ***add Assets*** caso os ativos sejam inseridos no proprio template, veja:
+3. São apenas dois métodos para fazer todo o trabalho. Você só precisa chamar o ***addAssets*** para definir os ativos de JS e CSS, ou o somente o ***render*** para renderizar a view selecionada. Você pode omitir o ***add Assets*** caso os ativos sejam inseridos no proprio template, veja:
 
 #### Add assets
 
@@ -96,7 +96,26 @@ or just
 
 $render = new \DevPontes\View\View('assets', $options);
 $render->render('home', $data);
+```
 
+#### Add CSS in &lt;head&gt;
+
+```html
+<head>
+    <title>View</title>
+    <!-- add CSS -->
+    <?= $this->style; ?> 
+</head>
+```
+
+#### Add JS in &lt;body&gt;
+
+```html
+<body>
+    ...
+   <!-- add JS -->
+   <?= $this->script; ?>
+</body>
 ```
 
 ## Author
