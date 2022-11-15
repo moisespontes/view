@@ -6,7 +6,7 @@ namespace DevPontes\View;
  * Class DevPontes View
  *
  * @author Moises Pontes <sesiom_assis@hotmail.com>
- * @package DevPontes\Views
+ * @package DevPontes\View
  */
 class View
 {
@@ -74,6 +74,10 @@ class View
         }
 
         include CONF_VIEWS_PATH . "/{$view}.php";
+
+        if ($this->options->footer) {
+            include CONF_VIEW_FOOTER;
+        }
     }
 
     /**
@@ -102,15 +106,5 @@ class View
         }
 
         return $this;
-    }
-
-    /**
-     * View desdruct add.
-     */
-    public function __destruct()
-    {
-        if ($this->options->footer) {
-            include CONF_VIEW_FOOTER;
-        }
     }
 }
