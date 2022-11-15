@@ -48,7 +48,7 @@ class View
      * @param array $data
      * @return void
      */
-    public function reder(string $view, array $data)
+    public function render(string $view, array $data)
     {
         $file = CONF_VIEWS_PATH . "/{$view}.php";
 
