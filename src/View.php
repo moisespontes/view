@@ -18,16 +18,13 @@ class View
     private $script;
     /** @var object */
     private $options;
-    /** @var string */
-    private $srcPath;
 
     /**
      * View constructor.
      *
-     * @param string $srcPath
      * @param array $options
      */
-    public function __construct(string $srcPath, array $options = [])
+    public function __construct(array $options = [])
     {
         $default = [
             "head" => true,
@@ -36,7 +33,6 @@ class View
             "footer" => true,
         ];
 
-        $this->srcPath = $srcPath;
         $this->options = (object) array_merge($default, $options);
     }
 
@@ -48,7 +44,7 @@ class View
      * @param array $data
      * @return void
      */
-    public function render(string $view, array $data)
+    public function render(string $view, array $data = [])
     {
         $file = CONF_VIEWS_PATH . "/{$view}.php";
 
@@ -74,37 +70,44 @@ class View
         }
 
         include CONF_VIEWS_PATH . "/{$view}.php";
-
-        if ($this->options->footer) {
-            include CONF_VIEW_FOOTER;
-        }
     }
 
     /**
      * Adiciona os recursos de CSS e JS.
-     * Passar como argumento um array de assets.
+     * Passar como argumento o caminho dos recursos, um array de assets.
      * Não é necessário colocar extenção.
+     * [opcional] $cache deslida passar fals.
      *
      * @example - array(['style'] => ['global',...],['script'] => ['global',...]);
+     * @param string $source
      * @param array $assets
+     * @param boolean $cache
      * @return View
      */
-    public function addAssets(array $assets): View
+    public function addAssets(string $source, array $assets, bool $cache = true): View
     {
-        $time = time();
+        $v = '';
+        if (empty($cache)) {
+            $v = "?v=" . time();
+        }
 
         if (!empty($assets['script'])) {
             foreach ($assets['script'] as $script) {
-                $this->script .= "<script src='{$this->srcPath}/js/{$script}.js?v={$time}'></script>\n    ";
+                $this->script .= "<script src='{$source}/js/{$script}.js{$v}'></script>\n    ";
             }
         }
 
         if (!empty($assets['style'])) {
             foreach ($assets['style'] as $style) {
-                $this->style .= "<link href='{$this->srcPath}/css/{$style}.css?v={$time}' rel='stylesheet'>\n    ";
+                $this->style .= "<link href='{$source}/css/{$style}.css{$v}' rel='stylesheet'>\n    ";
             }
         }
 
         return $this;
+    }
+
+    public function __destruct()
+    {
+        require CONF_VIEW_FOOTER;
     }
 }

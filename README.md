@@ -33,52 +33,53 @@ composer require devpontes/view
 1. Para utilizar o View precisamos definir as seguintes CONSTANTES no arquivo de execução ou em um arquivo separado.
 
 ```php
-
-const CONF_VIEWS_PATH  = "views";
-const CONF_VIEW_HEAD   = CONF_VIEWS_PATH . "/includes/head.php";
-const CONF_VIEW_ASIDE  = CONF_VIEWS_PATH . "/includes/aside.php";
-const CONF_VIEW_HEADER = CONF_VIEWS_PATH . "/includes/header.php";
-const CONF_VIEW_FOOTER = CONF_VIEWS_PATH . "/includes/footer.php";
+define('CONF_ROOT_PATH', dirname(__FILE__, 1));
+define('CONF_VIEWS_PATH', CONF_ROOT_PATH . "/views");
+define('CONF_VIEW_HEAD', CONF_VIEWS_PATH . "/includes/head.php");
+define('CONF_VIEW_ASIDE', CONF_VIEWS_PATH . "/includes/aside.php");
+define('CONF_VIEW_HEADER', CONF_VIEWS_PATH . "/includes/header.php");
+define('CONF_VIEW_FOOTER', CONF_VIEWS_PATH . "/includes/footer.php");
 ```
 
-##### At initialization, enter the assets path and an array of template options
+##### On initialization, pass the template option array
 
-2. Na inicialização, informe o caminho dos ativos e um array de opção do template.
+2. Na inicialização, passe o array de opção do template.
 
 ```php
-
 /** Dynamic template control */
-$options = array(
+$options = [
     "head" => true,
     "aside" => false,
     "header" => true,
     "footer" => true,
-);
+];
 
-$render = new \DevPontes\View\View('assets', $options);
+$render = new \DevPontes\View\View($options);
 ```
 
-##### There are just two methods to do all the work. You just need to call ***addAssets*** to set the JS and CSS assets, or just ***render*** to render the selected View. You can omit the ***add Assets*** if the assets are inserted in the template itself, see
+##### It's just two methods to do all the work. You just need to call ***addAssets*** to define the JS and CSS assets, and/or ***render*** to render the selected view. You can omit the ***add Assets*** if the assets are inserted in the template itself, see
 
-3. São apenas dois métodos para fazer todo o trabalho. Você só precisa chamar o ***addAssets*** para definir os ativos de JS e CSS, ou o somente o ***render*** para renderizar a view selecionada. Você pode omitir o ***add Assets*** caso os ativos sejam inseridos no proprio template, veja:
+3. São apenas dois métodos para fazer todo o trabalho. Você só precisa chamar o ***addAssets*** para definir os ativos de JS e CSS, e/ou o ***render*** para renderizar a view selecionada. Você pode omitir o ***add Assets*** caso os ativos sejam inseridos no proprio template, veja:
 
 #### Add assets
 
 ```php
-<?php
-
 /** assets array */
 $assets['style']  = ['global', 'style'];
 $assets['script'] = ['global', 'script'];
 
-$render->addAssets($assets);
+/** soucer path */
+$source = 'assets';
+
+/** define cache */
+$cache = false;
+
+$render->addAssets($source, $assets, $cache);
 ```
 
 #### Render view
 
 ```php
-<?php
-
 /** set view data */
 $user  = new \stdClass();
 $user->name = "John Doe";
@@ -92,9 +93,8 @@ $render->render('home', $data);
 or just
 
 ```php
-<?php
-
-$render = new \DevPontes\View\View('assets', $options);
+$render = new \DevPontes\View\View($options);
+$render->addAssets('assets', $assets);
 $render->render('home', $data);
 ```
 
