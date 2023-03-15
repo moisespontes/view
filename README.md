@@ -17,7 +17,7 @@ View é um componente simples para renderização de templates com PHP nativo.
 View is available via Composer:
 
 ```bash
-"devpontes/view": "1.0.*"
+"devpontes/view": "1.1.*"
 ```
 
 or run

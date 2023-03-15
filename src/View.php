@@ -108,6 +108,8 @@ class View
 
     public function __destruct()
     {
-        require CONF_VIEW_FOOTER;
+        if ($this->options->footer) {
+            include CONF_VIEW_FOOTER;
+        }
     }
 }
