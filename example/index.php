@@ -2,22 +2,34 @@
 
 require "../vendor/autoload.php";
 
-define('CONF_ROOT_PATH', dirname(__FILE__, 1));
-define('CONF_VIEWS_PATH', CONF_ROOT_PATH . "/views");
-define('CONF_VIEW_HEAD', CONF_VIEWS_PATH . "/includes/head.php");
-define('CONF_VIEW_ASIDE', CONF_VIEWS_PATH . "/includes/aside.php");
-define('CONF_VIEW_HEADER', CONF_VIEWS_PATH . "/includes/header.php");
-define('CONF_VIEW_FOOTER', CONF_VIEWS_PATH . "/includes/footer.php");
+$viewPath   = dirname(__FILE__, 1) . '/views';
+$viewHead   = "{$viewPath}/includes/head";
+$viewAside  = "{$viewPath}/includes/aside";
+$viewHeader = "{$viewPath}/includes/header";
+$viewFooter = "{$viewPath}/includes/footer";
 
 $assets['style']  = ['style'];
 $assets['script'] = ['script'];
 
-$user  = new \stdClass();
+$user = new \stdClass();
 $user->name = "John Doe";
 $user->age = 25;
 
 $data['user'] = $user;
 
-$render = new \DevPontes\View\View();
-$render->addAssets('assets', $assets, false);
-$render->render('home', $data);
+$v = new \DevPontes\View\View($viewPath, 'php');
+/**
+ * Default path for styles and scripts folders
+ * css and js
+ *
+ * Use modifier methods to change the pattern
+ * setStylePath()
+ * setScriptPath()
+ */
+$v->addAssets('assets', $assets);
+
+$v->setHead($viewHead);
+$v->setAside($viewAside);
+$v->setHeader($viewHeader);
+$v->setFooter($viewFooter);
+$v->render('home', $data);

@@ -17,7 +17,7 @@ View é um componente simples para renderização de templates com PHP nativo.
 View is available via Composer:
 
 ```bash
-"devpontes/view": "1.1.*"
+"devpontes/view": "2.0.*"
 ```
 
 or run
@@ -28,38 +28,40 @@ composer require devpontes/view
 
 ## Documentation
 
-##### To use the View we need to define the following CONSTANTS in the execution file or in a separate file
+##### To use the View you need to define the path for the views folder and optionally the path for the head, header, aside and footer files to dynamically use the template
 
-1. Para utilizar o View precisamos definir as seguintes CONSTANTES no arquivo de execução ou em um arquivo separado.
-
-```php
-define('CONF_ROOT_PATH', dirname(__FILE__, 1));
-define('CONF_VIEWS_PATH', CONF_ROOT_PATH . "/views");
-define('CONF_VIEW_HEAD', CONF_VIEWS_PATH . "/includes/head.php");
-define('CONF_VIEW_ASIDE', CONF_VIEWS_PATH . "/includes/aside.php");
-define('CONF_VIEW_HEADER', CONF_VIEWS_PATH . "/includes/header.php");
-define('CONF_VIEW_FOOTER', CONF_VIEWS_PATH . "/includes/footer.php");
-```
-
-##### On initialization, pass the template option array
-
-2. Na inicialização, passe o array de opção do template.
+1. Para utilizar o View você precisa definir o caminho para a pasta de views e de forma opcional o caminho dos arquivos de head, header, aside e footer para usar dinamicamente o template.
 
 ```php
-/** Dynamic template control */
-$options = [
-    "head" => true,
-    "aside" => false,
-    "header" => true,
-    "footer" => true,
-];
-
-$render = new \DevPontes\View\View($options);
+$viewPath   = dirname(__FILE__, 1) . '/views';
+$viewHead   = "{$viewPath}/includes/head";
+$viewAside  = "{$viewPath}/includes/aside";
+$viewHeader = "{$viewPath}/includes/header";
+$viewFooter = "{$viewPath}/includes/footer";
 ```
 
-##### It's just two methods to do all the work. You just need to call ***addAssets*** to define the JS and CSS assets, and/or ***render*** to render the selected view. You can omit the ***add Assets*** if the assets are inserted in the template itself, see
+##### At initialization, we need to pass the path to the views folder and the extension to the template file type as an argument
 
-3. São apenas dois métodos para fazer todo o trabalho. Você só precisa chamar o ***addAssets*** para definir os ativos de JS e CSS, e/ou o ***render*** para renderizar a view selecionada. Você pode omitir o ***add Assets*** caso os ativos sejam inseridos no proprio template, veja:
+2. Na inicialização precisamos passar como argumento o caminho para a pasta de views e a extensão para o tipo de arquivo de templates.
+
+```php
+$v = new \DevPontes\View\View($viewPath, 'php');
+```
+
+##### You can use modifier methods to dynamically include parts of the template, see
+
+3. Você pode utilizar os métodos modificadores para incluir dinamicamente partes do template, veja:
+
+```php
+$v->setHead($viewHead);
+$v->setAside($viewAside);
+$v->setHeader($viewHeader);
+$v->setFooter($viewFooter);
+```
+
+##### You can just use these two methods to do all the work. Call ***addAssets*** to define the JS and CSS assets, and ***render*** to render the selected view. You can omit the ***add Assets*** if the assets are inserted in the template itself, see
+
+4. Você pode usar apenas estes dois métodos para fazer todo o trabalho. Chame ***addAssets*** para definir os ativos de JS e CSS, e ***render*** para renderizar a view selecionada. Você pode omitir o ***add Assets*** caso os ativos sejam inseridos no próprio template, veja:
 
 #### Add assets
 
@@ -74,7 +76,7 @@ $source = 'assets';
 /** define cache */
 $cache = false;
 
-$render->addAssets($source, $assets, $cache);
+$v->addAssets($source, $assets, $cache);
 ```
 
 #### Render view
@@ -87,15 +89,22 @@ $user->age = 25;
 
 $data['user'] = $user;
 
-$render->render('home', $data);
+$v->render('home', $data);
 ```
 
 or just
 
 ```php
-$render = new \DevPontes\View\View($options);
-$render->addAssets('assets', $assets);
-$render->render('home', $data);
+$v = new \DevPontes\View\View($options);
+$v->addAssets('assets', $assets);
+$v->render('home', $data);
+```
+
+#### Default path for styles and scripts folders (css and js). Use modifier methods to change the pattern
+
+```php
+$v->setStylePath('assets/style');
+$v->setScriptPath('assets/script');
 ```
 
 #### Add CSS in &lt;head&gt;

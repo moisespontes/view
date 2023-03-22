@@ -12,77 +12,129 @@ class View
 {
     /** @var object */
     private $data;
+
+    /** @var string */
+    private $head;
+
+    /** @var string */
+    private $header;
+
+    /** @var string */
+    private $aside;
+
+    /** @var string */
+    private $footer;
+
     /** @var string */
     private $style;
+
     /** @var string */
     private $script;
-    /** @var object */
-    private $options;
+
+    /** @var string */
+    private $viewPath;
+
+    /** @var string */
+    private $stylePath;
+
+    /** @var string */
+    private $scriptPath;
+
+    /** @var string */
+    private $extension;
 
     /**
      * View constructor.
      *
-     * @param array $options
+     * @param string $viewPath ex: src/views
+     * @param string $extension php or html or other
      */
-    public function __construct(array $options = [])
+    public function __construct(string $viewPath, string $extension)
     {
-        $default = [
-            "head" => true,
-            "aside" => true,
-            "header" => true,
-            "footer" => true,
-        ];
-
-        $this->options = (object) array_merge($default, $options);
+        $this->extension = $extension;
+        $this->viewPath  = $viewPath;
     }
 
     /**
-     * Renderiza a View
+     * Define head view
      *
-     * @example - $v->render('home', array('dados' => [...]));
-     * @param string $view
-     * @param array $data
-     * @return void
-     */
-    public function render(string $view, array $data = [])
-    {
-        $file = CONF_VIEWS_PATH . "/{$view}.php";
-
-        if (!file_exists($file)) {
-            throw new \Exception("Erro ao carregar View");
-            return;
-        }
-
-        if (!empty($data)) {
-            $this->data = (object) $data;
-        }
-
-        if ($this->options->head) {
-            include CONF_VIEW_HEAD;
-        }
-
-        if ($this->options->header) {
-            include CONF_VIEW_HEADER;
-        }
-
-        if ($this->options->aside) {
-            include CONF_VIEW_ASIDE;
-        }
-
-        include CONF_VIEWS_PATH . "/{$view}.php";
-    }
-
-    /**
-     * Adiciona os recursos de CSS e JS.
-     * Passar como argumento o caminho dos recursos, um array de assets.
-     * Não é necessário colocar extenção.
-     * [opcional] $cache deslida passar fals.
-     *
-     * @example - array(['style'] => ['global',...],['script'] => ['global',...]);
-     * @param string $source
-     * @param array $assets
-     * @param boolean $cache
+     * @param string $head
      * @return View
+     */
+    public function setHead(string $head): View
+    {
+        $this->head = $head;
+        return $this;
+    }
+
+    /**
+     * Define header view
+     *
+     * @param string $header
+     * @return View
+     */
+    public function setHeader(string $header): View
+    {
+        $this->header = $header;
+        return $this;
+    }
+
+    /**
+     * Define aside view
+     *
+     * @param string $aside
+     * @return View
+     */
+    public function setAside(string $aside): View
+    {
+        $this->aside = $aside;
+        return $this;
+    }
+
+    /**
+     * Define footer view
+     *
+     * @param string $footer
+     * @return View
+     */
+    public function setFooter(string $footer): View
+    {
+        $this->footer = $footer;
+        return $this;
+    }
+
+    /**
+     * Set path for styles
+     *
+     * @param string $stylePath
+     * @return View
+     */
+    public function setStylePath(string $stylePath): View
+    {
+        $this->stylePath = $stylePath;
+        return $this;
+    }
+
+    /**
+     * Set path for scripts
+     *
+     * @param string $scriptPath
+     * @return View
+     */
+    public function setScriptPath(string $scriptPath): View
+    {
+        $this->scriptPath = $scriptPath;
+        return $this;
+    }
+
+    /**
+     * Adds CSS and JS features.
+     *
+     * @param string $source path to resources folder
+     * @param array $assets array of assets
+     * @param boolean $cache [optional] cache on/off, defaults true
+     * @return View
+     * @example - $v->addAssets('assets', array(['style'] => ['global',], ['script'] => ['global',]), false);
      */
     public function addAssets(string $source, array $assets, bool $cache = true): View
     {
@@ -91,25 +143,63 @@ class View
             $v = "?v=" . time();
         }
 
+        $stylePath  = empty($this->stylePath) ? "css" : $this->stylePath;
+        $scriptPath = empty($this->scriptPath) ? "js" : $this->scriptPath;
+
         if (!empty($assets['script'])) {
             foreach ($assets['script'] as $script) {
-                $this->script .= "<script src='{$source}/js/{$script}.js{$v}'></script>\n    ";
+                $this->script .= "<script src='{$source}/{$scriptPath}/{$script}.js{$v}'></script>\n    ";
             }
         }
 
         if (!empty($assets['style'])) {
             foreach ($assets['style'] as $style) {
-                $this->style .= "<link href='{$source}/css/{$style}.css{$v}' rel='stylesheet'>\n    ";
+                $this->style .= "<link href='{$source}/{$stylePath}/{$style}.css{$v}' rel='stylesheet'>\n    ";
             }
         }
 
         return $this;
     }
 
+    /**
+     * Render the View
+     * Data array will be converted to stdClass object
+     *
+     * @param string $view
+     * @param array $data
+     * @return void
+     * @throws Exception
+     * @example - $v->render('home', array('data' => [...]));
+     */
+    public function render(string $view, array $data = []): void
+    {
+        $file = "{$this->viewPath}/{$view}.{$this->extension}";
+        $this->data = (object) $data;
+
+        if (!file_exists($file)) {
+            throw new \Exception("Error loading view");
+            return;
+        }
+
+        if ($this->head) {
+            include "{$this->head}.{$this->extension}";
+        }
+
+        if ($this->header) {
+            include "{$this->header}.{$this->extension}";
+        }
+
+        if ($this->aside) {
+            include "{$this->aside}.{$this->extension}";
+        }
+
+        include $file;
+    }
+
     public function __destruct()
     {
-        if ($this->options->footer) {
-            include CONF_VIEW_FOOTER;
+        if ($this->footer) {
+            include "{$this->footer}.{$this->extension}";
         }
     }
 }

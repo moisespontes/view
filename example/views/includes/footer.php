@@ -1,6 +1,6 @@
     
         <footer>
-            <p>Copy &copy; View</p>
+            <p>Copy &copy; View by DevPontes</p>
         </footer>
     </section>
     <!-- add JS -->
