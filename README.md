@@ -95,7 +95,7 @@ $v->render('home', $data);
 or just
 
 ```php
-$v = new \DevPontes\View\View($options);
+$v = new \DevPontes\View\View($viewPath, 'php');
 $v->addAssets('assets', $assets);
 $v->render('home', $data);
 ```
