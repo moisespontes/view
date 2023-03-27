@@ -58,10 +58,10 @@ class View
     /**
      * Define head view
      *
-     * @param string $head
+     * @param string|null $head
      * @return View
      */
-    public function setHead(string $head): View
+    public function setHead(?string $head): View
     {
         $this->head = $head;
         return $this;
@@ -70,10 +70,10 @@ class View
     /**
      * Define header view
      *
-     * @param string $header
+     * @param string|null $header
      * @return View
      */
-    public function setHeader(string $header): View
+    public function setHeader(?string $header): View
     {
         $this->header = $header;
         return $this;
@@ -82,10 +82,10 @@ class View
     /**
      * Define aside view
      *
-     * @param string $aside
+     * @param string|null $aside
      * @return View
      */
-    public function setAside(string $aside): View
+    public function setAside(?string $aside): View
     {
         $this->aside = $aside;
         return $this;
@@ -94,10 +94,10 @@ class View
     /**
      * Define footer view
      *
-     * @param string $footer
+     * @param string|null $footer
      * @return View
      */
-    public function setFooter(string $footer): View
+    public function setFooter(?string $footer): View
     {
         $this->footer = $footer;
         return $this;
@@ -194,10 +194,7 @@ class View
         }
 
         include $file;
-    }
 
-    public function __destruct()
-    {
         if ($this->footer) {
             include "{$this->footer}.{$this->extension}";
         }

@@ -30,6 +30,6 @@ $v->addAssets('assets', $assets);
 
 $v->setHead($viewHead);
 $v->setAside($viewAside);
-$v->setHeader($viewHeader);
-$v->setFooter($viewFooter);
+$v->setHeader(false);
+$v->setFooter(false);
 $v->render('home', $data);
