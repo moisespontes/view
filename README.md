@@ -132,8 +132,7 @@ $v->setScriptPath('assets/script');
 <head>
   <title>View</title>
   <!-- add CSS -->
-  <?= $this->
-  assets->getStyles() ?>
+  <?= $this->assets->getStyles() ?>
 </head>
 ```
 
