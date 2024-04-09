@@ -1,4 +1,3 @@
-
         <aside>
             <ul>
                 <li>Post 1</li>

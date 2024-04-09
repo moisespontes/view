@@ -2,6 +2,8 @@
 
 namespace DevPontes\View;
 
+use DevPontes\View\Exception\ErrorRender;
+
 /**
  * Class DevPontes View
  *
@@ -10,8 +12,11 @@ namespace DevPontes\View;
  */
 class View
 {
-    /** @var object */
+    /** @var array */
     private $data;
+
+    /** @var Assets */
+    public $assets;
 
     /** @var string */
     private $head;
@@ -26,19 +31,7 @@ class View
     private $footer;
 
     /** @var string */
-    private $style;
-
-    /** @var string */
-    private $script;
-
-    /** @var string */
     private $viewPath;
-
-    /** @var string */
-    private $stylePath;
-
-    /** @var string */
-    private $scriptPath;
 
     /** @var string */
     private $extension;
@@ -51,8 +44,28 @@ class View
      */
     public function __construct(string $viewPath, string $extension)
     {
+        $this->viewPath = $viewPath;
         $this->extension = $extension;
-        $this->viewPath  = $viewPath;
+    }
+
+    public function __get($name)
+    {
+        return $this->data[$name];
+    }
+
+    public function __isset($name)
+    {
+        return isset($this->data[$name]);
+    }
+
+    /**
+     * View data
+     *
+     * @return object
+     */
+    public function data(): object
+    {
+        return (object) $this->data;
     }
 
     /**
@@ -104,99 +117,79 @@ class View
     }
 
     /**
-     * Set path for styles
-     *
-     * @param string $stylePath
-     * @return View
-     */
-    public function setStylePath(string $stylePath): View
-    {
-        $this->stylePath = $stylePath;
-        return $this;
-    }
-
-    /**
-     * Set path for scripts
-     *
-     * @param string $scriptPath
-     * @return View
-     */
-    public function setScriptPath(string $scriptPath): View
-    {
-        $this->scriptPath = $scriptPath;
-        return $this;
-    }
-
-    /**
-     * Adds CSS and JS features.
-     *
-     * @param string $source path to resources folder
-     * @param array $assets array of assets
-     * @param boolean $cache [optional] cache on/off, defaults true
-     * @return View
-     * @example - $v->addAssets('assets', array(['style'] => ['global',], ['script'] => ['global',]), false);
-     */
-    public function addAssets(string $source, array $assets, bool $cache = true): View
-    {
-        $v = '';
-        if (empty($cache)) {
-            $v = "?v=" . time();
-        }
-
-        $stylePath  = empty($this->stylePath) ? "css" : $this->stylePath;
-        $scriptPath = empty($this->scriptPath) ? "js" : $this->scriptPath;
-
-        if (!empty($assets['script'])) {
-            foreach ($assets['script'] as $script) {
-                $this->script .= "<script src='{$source}/{$scriptPath}/{$script}.js{$v}'></script>\n    ";
-            }
-        }
-
-        if (!empty($assets['style'])) {
-            foreach ($assets['style'] as $style) {
-                $this->style .= "<link href='{$source}/{$stylePath}/{$style}.css{$v}' rel='stylesheet'>\n    ";
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Render the View
      * Data array will be converted to stdClass object
      *
      * @param string $view
      * @param array $data
      * @return void
-     * @throws Exception
      * @example - $v->render('home', array('data' => [...]));
      */
     public function render(string $view, array $data = []): void
     {
-        $file = "{$this->viewPath}/{$view}.{$this->extension}";
-        $this->data = (object) $data;
+        $this->data = $data;
 
-        if (!file_exists($file)) {
-            throw new \Exception("Error loading view");
-            return;
-        }
+        extract($this->data);
 
         if ($this->head) {
-            include "{$this->head}.{$this->extension}";
+            include $this->head . "." . $this->extension;
         }
 
         if ($this->header) {
-            include "{$this->header}.{$this->extension}";
+            include $this->header . "." . $this->extension;
         }
 
         if ($this->aside) {
-            include "{$this->aside}.{$this->extension}";
+            include $this->aside . "." . $this->extension;
         }
 
-        include $file;
+        include $this->resolvePath($view);
 
         if ($this->footer) {
-            include "{$this->footer}.{$this->extension}";
+            include $this->footer . "." . $this->extension;
         }
+    }
+
+    /**
+     * Insert View
+     *
+     * @param string $view
+     * @param string $extension
+     * @return void
+     */
+    public function insert(string $view, string $extension = ''): void
+    {
+        extract($this->data);
+
+        $this->extension = $extension ? $extension : $this->extension;
+
+        include $this->resolvePath($view);
+    }
+
+    /**
+     * @param string $view
+     * @return string
+     */
+    private function resolvePath(string $view): string
+    {
+        $file = $this->viewPath . '/' . $view . '.' . $this->extension;
+
+        if (!file_exists($file)) {
+            throw new ErrorRender("Error loading view...");
+        }
+
+        return $file;
+    }
+
+    /**
+     * Assets class injection
+     *
+     * @param Assets $assets
+     * @return View
+     */
+    public function addAssets(Assets $assets): View
+    {
+        $this->assets = $assets;
+        return $this;
     }
 }
