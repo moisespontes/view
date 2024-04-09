@@ -16,11 +16,11 @@ class ErrorRender extends Exception
     /**
      * ErrorRender constructor.
      *
-     * @param [type] $message
+     * @param string $message
      * @param integer $code
      * @param Throwable|null $previous
      */
-    public function __construct($message, $code = 0, Throwable $previous = null)
+    public function __construct(string $message, int $code = 1, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

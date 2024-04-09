@@ -61,7 +61,7 @@ class Assets
      * Set path for styles
      *
      * @param string $stylePath
-     * @return View
+     * @return Assets
      */
     public function setStylePath(string $stylePath): Assets
     {
@@ -73,7 +73,7 @@ class Assets
      * Set path for scripts
      *
      * @param string $scriptPath
-     * @return View
+     * @return Assets
      */
     public function setScriptPath(string $scriptPath): Assets
     {
@@ -93,7 +93,7 @@ class Assets
         $version = $this->cache ? "" : "?v=" . time();
         $stylePath = empty($this->stylePath) ? "css" : $this->stylePath;
 
-        if ($css) {
+        if (!empty($css)) {
             foreach ($css as $style) {
                 $this->styles .= "<link href='{$this->source}/{$stylePath}/{$style}.css{$version}' rel='stylesheet'>\n    ";
             }
@@ -114,7 +114,7 @@ class Assets
         $version = $this->cache ? "" : "?v=" . time();
         $scriptPath = empty($this->scriptPath) ? "js" : $this->scriptPath;
 
-        if ($js) {
+        if (!empty($js)) {
             foreach ($js as $script) {
                 $this->scripts .= "<script src='{$this->source}/{$scriptPath}/{$script}.js{$version}'></script>\n    ";
             }
