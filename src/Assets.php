@@ -42,17 +42,17 @@ class Assets
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getStyles(): string
+    public function getStyles(): ?string
     {
         return $this->styles;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getScripts(): string
+    public function getScripts(): ?string
     {
         return $this->scripts;
     }
