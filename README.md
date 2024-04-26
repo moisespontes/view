@@ -43,10 +43,10 @@ composer require devpontes/view
 
 ```php
 $viewPath   = dirname(__FILE__, 1) . '/views';
-$viewHead   = "{$viewPath}/includes/head";
-$viewAside  = "{$viewPath}/includes/aside";
-$viewHeader = "{$viewPath}/includes/header";
-$viewFooter = "{$viewPath}/includes/footer";
+$viewHead   = "/includes/head";
+$viewAside  = "/includes/aside";
+$viewHeader = "/includes/header";
+$viewFooter = "/includes/footer";
 ```
 
 ##### At initialization, we need to pass the path to the views folder and the extension to the template file type as an argument
@@ -132,7 +132,8 @@ $v->setScriptPath('assets/script');
 <head>
   <title>View</title>
   <!-- add CSS -->
-  <?= $this->assets->getStyles() ?>
+  <?= $this->
+  assets->getStyles() ?>
 </head>
 ```
 
