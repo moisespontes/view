@@ -3,10 +3,10 @@
 require "../vendor/autoload.php";
 
 $viewPath   = dirname(__FILE__, 1) . '/views';
-$viewHead   = $viewPath . "/includes/head";
-$viewAside  = $viewPath . "/includes/aside";
-$viewHeader = $viewPath . "/includes/header";
-$viewFooter = $viewPath . "/includes/footer";
+$viewHead   = "/includes/head";
+$viewAside  = "/includes/aside";
+$viewHeader = "/includes/header";
+$viewFooter = "/includes/footer";
 
 $css = ['style'];
 $js  = ['script'];

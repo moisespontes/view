@@ -132,21 +132,21 @@ class View
         extract($this->data);
 
         if ($this->head) {
-            include $this->head . "." . $this->extension;
+            include $this->resolvePath($this->head);
         }
 
         if ($this->header) {
-            include $this->header . "." . $this->extension;
+            include $this->resolvePath($this->header);
         }
 
         if ($this->aside) {
-            include $this->aside . "." . $this->extension;
+            include $this->resolvePath($this->aside);
         }
 
         include $this->resolvePath($view);
 
         if ($this->footer) {
-            include $this->footer . "." . $this->extension;
+            include $this->resolvePath($this->footer);
         }
     }
 
