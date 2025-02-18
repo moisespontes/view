@@ -10,23 +10,12 @@ namespace DevPontes\View;
  */
 class Assets
 {
-    /** @var string */
-    private $styles;
-
-    /** @var string */
-    private $scripts;
-
-    /** @var string */
-    private $stylePath;
-
-    /** @var string */
-    private $scriptPath;
-
-    /** @var string */
-    private $source;
-
-    /** @var bool */
-    private $cache;
+    private bool $cache;
+    private string $styles;
+    private string $source;
+    private string $scripts;
+    private string $stylePath;
+    private string $scriptPath;
 
     /**
      * Assets constructor.
@@ -37,22 +26,28 @@ class Assets
      */
     public function __construct(string $src, bool $cache = true)
     {
+        $this->styles = '';
+        $this->scripts = '';
+
         $this->source = $src;
         $this->cache = $cache;
+
+        $this->stylePath = "{$this->source}/css";
+        $this->scriptPath = "{$this->source}/js";
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getStyles(): ?string
+    public function getStyles(): string
     {
         return $this->styles;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getScripts(): ?string
+    public function getScripts(): string
     {
         return $this->scripts;
     }
@@ -65,7 +60,7 @@ class Assets
      */
     public function setStylePath(string $stylePath): Assets
     {
-        $this->stylePath = $stylePath;
+        $this->stylePath = $this->source . '/' . ltrim($stylePath, '/');
         return $this;
     }
 
@@ -77,7 +72,7 @@ class Assets
      */
     public function setScriptPath(string $scriptPath): Assets
     {
-        $this->scriptPath = $scriptPath;
+        $this->scriptPath = $this->source . '/' . ltrim($scriptPath, '/');
         return $this;
     }
 
@@ -90,15 +85,7 @@ class Assets
      */
     public function makeStyle(array $css): Assets
     {
-        $version = $this->cache ? "" : "?v=" . time();
-        $stylePath = empty($this->stylePath) ? "css" : $this->stylePath;
-
-        if (!empty($css)) {
-            foreach ($css as $style) {
-                $this->styles .= "<link href='{$this->source}/{$stylePath}/{$style}.css{$version}' rel='stylesheet'>\n    ";
-            }
-        }
-
+        $this->styles = $this->build('link', $css, $this->stylePath);
         return $this;
     }
 
@@ -111,15 +98,31 @@ class Assets
      */
     public function makeScript(array $js): Assets
     {
-        $version = $this->cache ? "" : "?v=" . time();
-        $scriptPath = empty($this->scriptPath) ? "js" : $this->scriptPath;
+        $this->scripts = $this->build('script', $js, $this->scriptPath);
+        return $this;
+    }
 
-        if (!empty($js)) {
-            foreach ($js as $script) {
-                $this->scripts .= "<script src='{$this->source}/{$scriptPath}/{$script}.js{$version}'></script>\n    ";
-            }
+    /**
+     * Build styles and scripts
+     *
+     * @param string $tag
+     * @param array $files
+     * @param string $path
+     * @return string
+     */
+    private function build(string $tag, array $files, string $path): string
+    {
+        $version = $this->cache ? "" : "?v=" . time();
+
+        if (!$files) {
+            return '';
         }
 
-        return $this;
+        $tags = array_map(fn($file) => match ($tag) {
+            'script' => "<script src='{$path}/{$file}.js{$version}'></script>",
+            'link' => "<link rel='stylesheet' href='{$path}/{$file}.css{$version}'>",
+        }, $files);
+
+        return implode("\n    ", $tags) . "\n    ";
     }
 }

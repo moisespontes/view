@@ -12,29 +12,22 @@ use DevPontes\View\Exception\ErrorRender;
  */
 class View
 {
-    /** @var array */
-    private $data;
-
-    /** @var Assets */
-    public $assets;
-
     /** @var string */
     private $head;
-
-    /** @var string */
-    private $header;
 
     /** @var string */
     private $aside;
 
     /** @var string */
+    private $header;
+
+    /** @var string */
     private $footer;
 
-    /** @var string */
-    private $viewPath;
-
-    /** @var string */
-    private $extension;
+    private array $data;
+    public Assets $assets;
+    private string $viewPath;
+    private string $extension;
 
     /**
      * View constructor.
@@ -50,7 +43,7 @@ class View
 
     public function __get($name)
     {
-        return $this->data[$name];
+        return $this->data[$name] ?? null;
     }
 
     public function __isset($name)
@@ -65,16 +58,16 @@ class View
      */
     public function data(): object
     {
-        return (object) $this->data;
+        return json_decode(json_encode($this->data), false);
     }
 
     /**
      * Define head view
      *
-     * @param string|null $head
+     * @param string $head
      * @return View
      */
-    public function setHead(?string $head): View
+    public function setHead(string $head): View
     {
         $this->head = $head;
         return $this;
@@ -83,10 +76,10 @@ class View
     /**
      * Define header view
      *
-     * @param string|null $header
+     * @param string $header
      * @return View
      */
-    public function setHeader(?string $header): View
+    public function setHeader(string $header): View
     {
         $this->header = $header;
         return $this;
@@ -95,10 +88,10 @@ class View
     /**
      * Define aside view
      *
-     * @param string|null $aside
+     * @param string $aside
      * @return View
      */
-    public function setAside(?string $aside): View
+    public function setAside(string $aside): View
     {
         $this->aside = $aside;
         return $this;
@@ -107,10 +100,10 @@ class View
     /**
      * Define footer view
      *
-     * @param string|null $footer
+     * @param string $footer
      * @return View
      */
-    public function setFooter(?string $footer): View
+    public function setFooter(string $footer): View
     {
         $this->footer = $footer;
         return $this;
@@ -161,7 +154,7 @@ class View
     {
         extract($this->data);
 
-        $this->extension = $extension ? $extension : $this->extension;
+        $this->extension = $extension ?: $this->extension;
 
         include $this->resolvePath($view);
     }
@@ -172,10 +165,16 @@ class View
      */
     private function resolvePath(string $view): string
     {
-        $file = $this->viewPath . '/' . $view . '.' . $this->extension;
+        if (empty($view)) {
+            throw new ErrorRender("View name cannot be empty");
+        }
+
+        $bar  = DIRECTORY_SEPARATOR;
+        $view = $view[0] == '.' ? ltrim($view, '.') : $view;
+        $file = $this->viewPath . $bar . str_replace('.', $bar, $view) . '.' . $this->extension;
 
         if (!file_exists($file)) {
-            throw new ErrorRender("Error loading view...");
+            throw new ErrorRender("Error loading view {$file}");
         }
 
         return $file;

@@ -2,7 +2,7 @@
             <p>Copy &copy; View by DevPontes</p>
         </footer>
     </section>
-    <!-- add JS -->
-    <?= $this->assets->getScripts(); ?>
+    
+    <?= $this->assets->getScripts(); ?><!-- add JS -->
 </body>
 </html>

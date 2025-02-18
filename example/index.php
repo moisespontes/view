@@ -2,11 +2,7 @@
 
 require "../vendor/autoload.php";
 
-$viewPath   = dirname(__FILE__, 1) . '/views';
-$viewHead   = "/includes/head";
-$viewAside  = "/includes/aside";
-$viewHeader = "/includes/header";
-$viewFooter = "/includes/footer";
+$viewPath = dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'views';
 
 $css = ['style'];
 $js  = ['script'];
@@ -31,9 +27,9 @@ $v->addAssets($a);
 $v->assets->makeScript($js);
 $v->assets->makeStyle($css);
 
-$v->setHead($viewHead);
-$v->setAside($viewAside);
-$v->setHeader(null);
-$v->setFooter($viewFooter);
+$v->setHead('includes.head');
+$v->setAside('includes.aside');
+$v->setHeader('includes.header');
+$v->setFooter('includes.footer');
 
 $v->render('home', $data);

@@ -1,6 +1,6 @@
 # View by @Devpontes
 
-[![Maintainer](https://img.shields.io/badge/maintainer-@moi.pontes-blue.svg?style=flat-square)](https://instagram.com/moi.pontes)
+[![Maintainer](https://img.shields.io/badge/maintainer-@moisespontes-blue.svg?style=flat-square)](https://github.com/moisespontes)
 [![Source Code](https://img.shields.io/badge/source-moisespontes/view-blue.svg?style=flat-square)](https://github.com/moisespontes/view)
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/devpontes/view.svg?style=flat-square)](https://packagist.org/packages/devpontes/view)
 [![Latest Version](https://img.shields.io/github/release/moisespontes/view.svg?style=flat-square)](https://github.com/moisespontes/view/releases)
@@ -11,7 +11,7 @@
 
 ## About View componet
 
-##### View is a simple component for rendering templates with native PHP
+##### View is a simple component for rendering templates with native PHP.
 
 View é um componente simples para renderização de templates com PHP nativo.
 
@@ -19,14 +19,14 @@ View é um componente simples para renderização de templates com PHP nativo.
 
 - Renderização simples de templates. (simple rendering of templates)
 - Controle dinâmico de ativos de JS e CSS. (dynamic Control of JS and CSS Assets)
-- Controle dinâmico te partes do template HTML. (dynamic control of parts of the HTML template).
+- Controle dinâmico do template HTML. (dynamic control of the HTML template)
 
 ## Installation
 
 View is available via Composer:
 
 ```bash
-"devpontes/view": "3.0.*"
+"devpontes/view": "4.0.*"
 ```
 
 or run
@@ -37,19 +37,15 @@ composer require devpontes/view
 
 ## Documentation
 
-##### To use the View you need to define the path for the views folder and optionally the path for the head, header, aside and footer files to dynamically use the template
+##### To use View you need to define the path to the views folder.
 
-1. Para utilizar o View você precisa definir o caminho para a pasta de views e de forma opcional o caminho dos arquivos de head, header, aside e footer para usar dinamicamente um template.
+1. Para utilizar o View você precisa definir o caminho para a pasta de views.
 
 ```php
-$viewPath   = dirname(__FILE__, 1) . '/views';
-$viewHead   = "/includes/head";
-$viewAside  = "/includes/aside";
-$viewHeader = "/includes/header";
-$viewFooter = "/includes/footer";
+$viewPath = 'views';
 ```
 
-##### At initialization, we need to pass the path to the views folder and the extension to the template file type as an argument
+##### At initialization, we need to pass the path to the views folder and the extension to the template file type as an argument.
 
 2. Na inicialização precisamos passar como argumento o caminho para a pasta de views e a extensão para o tipo de arquivo de templates.
 
@@ -57,9 +53,9 @@ $viewFooter = "/includes/footer";
 $v = new \DevPontes\View\View($viewPath, 'php');
 ```
 
-##### Use modifier methods to dynamically include parts of the template. Then, use the render method passing an array of data and the selected view. For more details, see the example folder in the component directory.
+##### Use modifier methods to dynamically include parts of the template. Then, use the render method passing an array of data and the selected view. You can use either the slash (/) or the period (.) as a directory separator. For more details, see the example folder in the component directory.
 
-3. Use os métodos modificadores para incluir dinamicamente partes do template. Em seguida, utilize o método **_render_** passando um array de dados e a view selecionada. Para mais detalhes, veja a pasta de exemplo no diretório do componente.
+3. Use os métodos modificadores para incluir dinamicamente partes do template. Em seguida, utilize o método **_render_** passando um array de dados e a view selecionada. Você pode usar tanto a barra (/), quanto o ponto(.), como separador de diretórios. Para mais detalhes, veja a pasta de exemplo no diretório do componente.
 
 #### Basic usage
 
@@ -73,10 +69,10 @@ $data['user'] = $user;
 
 $v = new \DevPontes\View\View($viewPath, 'php');
 
-$v->setHead($viewHead);
-$v->setAside($viewAside);
-$v->setHeader($viewHeader);
-$v->setFooter($viewFooter);
+$v->setHead('includes.head');
+$v->setAside('includes.aside');
+$v->setHeader('includes.header');
+$v->setFooter('includes.footer');
 
 $v->render('home', $data);
 ```
@@ -119,11 +115,13 @@ $v->assets->makeScript($js);
 $v->assets->makeStyle($css);
 ```
 
-#### Default path for styles and scripts folders (css and js). Use modifier methods to change the pattern
+#### The default path for styles and scripts folders (css and js). Use modifier methods to change the pattern
+
+- O caminho padrão para pastas de estilos e scripts (css e js). Use métodos modificadores para alterar o padrão.
 
 ```php
-$v->setStylePath('assets/style');
-$v->setScriptPath('assets/script');
+$v->setStylePath('style');
+$v->setScriptPath('script');
 ```
 
 #### Add CSS in &lt;head&gt;
@@ -132,8 +130,7 @@ $v->setScriptPath('assets/script');
 <head>
   <title>View</title>
   <!-- add CSS -->
-  <?= $this->
-  assets->getStyles() ?>
+  <?= $this->assets->getStyles() ?>
 </head>
 ```
 
