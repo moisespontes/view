@@ -114,7 +114,7 @@ class Assets
     {
         $version = $this->cache ? "" : "?v=" . time();
 
-        if (!$files) {
+        if (empty($files)) {
             return '';
         }
 

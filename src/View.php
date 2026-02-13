@@ -37,7 +37,7 @@ class View
      */
     public function __construct(string $viewPath, string $extension)
     {
-        $this->viewPath = $viewPath;
+        $this->viewPath  = $viewPath;
         $this->extension = $extension;
     }
 
@@ -166,12 +166,12 @@ class View
     private function resolvePath(string $view): string
     {
         if (empty($view)) {
-            throw new ErrorRender("View name cannot be empty");
+            throw new ErrorRender('View name cannot be empty');
         }
 
         $bar  = DIRECTORY_SEPARATOR;
         $view = $view[0] == '.' ? ltrim($view, '.') : $view;
-        $file = $this->viewPath . $bar . str_replace('.', $bar, $view) . '.' . $this->extension;
+        $file = str_replace('.', $bar, $this->viewPath . $bar . $view) . '.' . $this->extension;
 
         if (!file_exists($file)) {
             throw new ErrorRender("Error loading view {$file}");
