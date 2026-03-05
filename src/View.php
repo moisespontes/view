@@ -49,7 +49,7 @@ class View
      */
     public function data(): object
     {
-        return json_decode(json_encode($this->data), false);
+        return (object) $this->data;
     }
 
     /**
