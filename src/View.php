@@ -164,7 +164,7 @@ class View
         $view = $view[0] == '.' ? ltrim($view, '.') : $view;
         $file = $this->viewPath . $bar . str_replace('.', $bar, $view) . '.' . $this->extension;
 
-        if (!file_exists($file)) {
+        if (!is_readable($file)) {
             throw new ErrorRender("Error loading view {$file}");
         }
 
