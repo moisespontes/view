@@ -12,13 +12,13 @@ use DevPontes\View\Exception\ErrorRender;
  */
 class View
 {
-    private null|string $head   = null;
-    private null|string $aside  = null;
-    private null|string $header = null;
-    private null|string $footer = null;
+    private null | string $head   = null;
+    private null | string $aside  = null;
+    private null | string $header = null;
+    private null | string $footer = null;
 
-    private array $data = [];
-    public Assets $assets;
+    private array $data    = [];
+    public ?Assets $assets = null;
 
     /**
      * View constructor.

@@ -1,17 +1,15 @@
 <?php
 
-require "../vendor/autoload.php";
+require '../vendor/autoload.php';
 
 $viewPath = dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'views';
 
 $css = ['style'];
 $js  = ['script'];
 
-$user = new \stdClass();
-$user->name = "John Doe";
-$user->age = 25;
-
-$data['user'] = $user;
+$user       = new \stdClass();
+$user->name = 'John Doe';
+$user->age  = 25;
 
 /**
  * Default path to css and js folder
@@ -32,4 +30,4 @@ $v->setAside('includes.aside');
 $v->setHeader('includes.header');
 $v->setFooter('includes.footer');
 
-$v->render('home', $data);
+$v->render('home', ['user' => $user]);
