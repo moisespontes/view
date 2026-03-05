@@ -12,22 +12,13 @@ use DevPontes\View\Exception\ErrorRender;
  */
 class View
 {
-    /** @var string */
-    private $head;
+    private null|string $head   = null;
+    private null|string $aside  = null;
+    private null|string $header = null;
+    private null|string $footer = null;
 
-    /** @var string */
-    private $aside;
-
-    /** @var string */
-    private $header;
-
-    /** @var string */
-    private $footer;
-
-    private array $data;
+    private array $data = [];
     public Assets $assets;
-    private string $viewPath;
-    private string $extension;
 
     /**
      * View constructor.
@@ -35,10 +26,10 @@ class View
      * @param string $viewPath ex: src/views
      * @param string $extension php or html or other
      */
-    public function __construct(string $viewPath, string $extension)
-    {
-        $this->viewPath = $viewPath;
-        $this->extension = $extension;
+    public function __construct(
+        private string $viewPath,
+        private string $extension
+    ) {
     }
 
     public function __get($name)
@@ -166,7 +157,7 @@ class View
     private function resolvePath(string $view): string
     {
         if (empty($view)) {
-            throw new ErrorRender("View name cannot be empty");
+            throw new ErrorRender('View name cannot be empty');
         }
 
         $bar  = DIRECTORY_SEPARATOR;
