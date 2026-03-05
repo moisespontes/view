@@ -113,24 +113,18 @@ class View
     {
         $this->data = $data;
 
-        extract($this->data);
+        $sections = [
+            $this->head,
+            $this->header,
+            $this->aside,
+            $view,
+            $this->footer
+        ];
 
-        if ($this->head) {
-            include $this->resolvePath($this->head);
-        }
-
-        if ($this->header) {
-            include $this->resolvePath($this->header);
-        }
-
-        if ($this->aside) {
-            include $this->resolvePath($this->aside);
-        }
-
-        include $this->resolvePath($view);
-
-        if ($this->footer) {
-            include $this->resolvePath($this->footer);
+        foreach ($sections as $section) {
+            if ($section) {
+                $this->renderScope($section);
+            }
         }
     }
 
@@ -172,7 +166,21 @@ class View
     }
 
     /**
-     * Assets class injection
+     * Renderiza uma view extraindo `$this->data` para o escopo da view
+     *
+     * @param string $view
+     * @return void
+     */
+    private function renderScope(string $view): void
+    {
+        extract($this->data, EXTR_SKIP);
+        $file = $this->resolvePath($view);
+
+        include $file;
+    }
+
+    /**
+     * Injeta a instância de Assets na view.
      *
      * @param Assets $assets
      * @return View
