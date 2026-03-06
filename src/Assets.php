@@ -35,6 +35,8 @@ class Assets
     }
 
     /**
+     * Get styles tags
+     *
      * @return string
      */
     public function getStyles(): string
@@ -43,6 +45,8 @@ class Assets
     }
 
     /**
+     * Get scripts tags
+     *
      * @return string
      */
     public function getScripts(): string
@@ -110,11 +114,11 @@ class Assets
      */
     private function build(string $tag, array $files, string $path): string
     {
-        $version = $this->cache ? '' : '?v=' . time();
-
         if (empty($files)) {
             return '';
         }
+
+        $version = $this->cache ? '' : '?v=' . time();
 
         $tags = array_map(fn ($file) => match ($tag) {
             'script' => "<script src='{$path}/{$file}.js{$version}'></script>",
