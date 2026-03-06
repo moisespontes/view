@@ -7,7 +7,7 @@ use DevPontes\View\Exception\ErrorRender;
 /**
  * Class DevPontes View
  *
- * @author Moises Pontes <sesiom_assis@hotmail.com>
+ * @author Moises Pontes
  * @package DevPontes\View
  */
 class View
@@ -17,8 +17,10 @@ class View
     private null | string $header = null;
     private null | string $footer = null;
 
-    private array $data    = [];
-    public ?Assets $assets = null;
+    /** @var array An array of data to be passed to the view */
+    private array $data = [];
+
+    public null | Assets $assets = null;
 
     /**
      * View constructor.
@@ -122,14 +124,14 @@ class View
         ];
 
         foreach ($sections as $section) {
-            if ($section) {
+            if (!empty($section)) {
                 $this->renderScope($section);
             }
         }
     }
 
     /**
-     * Insert View
+     * Insert a partial view inside another view
      *
      * @param string $view
      * @param string $extension
@@ -137,32 +139,7 @@ class View
      */
     public function insert(string $view, string $extension = ''): void
     {
-        extract($this->data);
-
-        $this->extension = $extension ?: $this->extension;
-
-        include $this->resolvePath($view);
-    }
-
-    /**
-     * @param string $view
-     * @return string
-     */
-    private function resolvePath(string $view): string
-    {
-        if (empty($view)) {
-            throw new ErrorRender('View name cannot be empty');
-        }
-
-        $bar  = DIRECTORY_SEPARATOR;
-        $view = $view[0] == '.' ? ltrim($view, '.') : $view;
-        $file = $this->viewPath . $bar . str_replace('.', $bar, $view) . '.' . $this->extension;
-
-        if (!is_readable($file)) {
-            throw new ErrorRender("Error loading view {$file}");
-        }
-
-        return $file;
+        $this->renderScope($view, $extension);
     }
 
     /**
@@ -171,12 +148,37 @@ class View
      * @param string $view
      * @return void
      */
-    private function renderScope(string $view): void
+    private function renderScope(string $view, string $extension = ''): void
     {
+        $bar = DIRECTORY_SEPARATOR;
+
+        $ext  = $extension ?: $this->extension;
+        $view = str_replace('.', $bar, ltrim($view, '.'));
+
+        $file = $this->resolvePath($this->viewPath . $bar . $view . '.' . $ext);
+
         extract($this->data, EXTR_SKIP);
-        $file = $this->resolvePath($view);
 
         include $file;
+    }
+
+    /**
+     * @param string $view
+     * @return string
+     */
+    private function resolvePath(string $view): string
+    {
+        if ($view === '') {
+            throw new ErrorRender('View name cannot be empty');
+        }
+
+        $real = realpath($view);
+
+        if ($real === false || !is_readable($real)) {
+            throw new ErrorRender("Error loading view {$view}");
+        }
+
+        return $real;
     }
 
     /**
