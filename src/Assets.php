@@ -10,12 +10,11 @@ namespace DevPontes\View;
  */
 class Assets
 {
-    private bool $cache;
-    private string $styles;
-    private string $source;
-    private string $scripts;
     private string $stylePath;
     private string $scriptPath;
+
+    private string $styles  = '';
+    private string $scripts = '';
 
     /**
      * Assets constructor.
@@ -24,15 +23,11 @@ class Assets
      * @param boolean $cache [optional] cache on/off, defaults true
      * @example - new Assets('assets', false);
      */
-    public function __construct(string $src, bool $cache = true)
-    {
-        $this->styles = '';
-        $this->scripts = '';
-
-        $this->source = $src;
-        $this->cache = $cache;
-
-        $this->stylePath = "{$this->source}/css";
+    public function __construct(
+        private string $source,
+        private bool $cache = true
+    ) {
+        $this->stylePath  = "{$this->source}/css";
         $this->scriptPath = "{$this->source}/js";
     }
 
@@ -112,15 +107,15 @@ class Assets
      */
     private function build(string $tag, array $files, string $path): string
     {
-        $version = $this->cache ? "" : "?v=" . time();
+        $version = $this->cache ? '' : '?v=' . time();
 
         if (empty($files)) {
             return '';
         }
 
-        $tags = array_map(fn($file) => match ($tag) {
+        $tags = array_map(fn ($file) => match ($tag) {
             'script' => "<script src='{$path}/{$file}.js{$version}'></script>",
-            'link' => "<link rel='stylesheet' href='{$path}/{$file}.css{$version}'>",
+            'link'   => "<link rel='stylesheet' href='{$path}/{$file}.css{$version}'>",
         }, $files);
 
         return implode("\n    ", $tags) . "\n    ";
