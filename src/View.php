@@ -131,7 +131,7 @@ class View
     }
 
     /**
-     * Insert a partial view inside another view
+     * Insert a view into the current scope
      *
      * @param string $view
      * @param string $extension
@@ -143,7 +143,7 @@ class View
     }
 
     /**
-     * Renderiza uma view extraindo `$this->data` para o escopo da view
+     * Render the view in the current scope, allowing access to the data array as variables
      *
      * @param string $view
      * @return void
@@ -163,6 +163,8 @@ class View
     }
 
     /**
+     * Resolve the path of the view file and check if it is readable
+     *
      * @param string $view
      * @return string
      */
@@ -182,7 +184,7 @@ class View
     }
 
     /**
-     * Injeta a instância de Assets na view.
+     * Injects the Assets instance into the view.
      *
      * @param Assets $assets
      * @return View
