@@ -16,6 +16,9 @@ class Assets
     private string $styles  = '';
     private string $scripts = '';
 
+    private const TAG_STYLE  = 'link';
+    private const TAG_SCRIPT = 'script';
+
     /**
      * Assets constructor.
      *
@@ -80,7 +83,7 @@ class Assets
      */
     public function makeStyle(array $css): Assets
     {
-        $this->styles = $this->build('link', $css, $this->stylePath);
+        $this->styles = $this->build(self::TAG_STYLE, $css, $this->stylePath);
         return $this;
     }
 
@@ -93,7 +96,7 @@ class Assets
      */
     public function makeScript(array $js): Assets
     {
-        $this->scripts = $this->build('script', $js, $this->scriptPath);
+        $this->scripts = $this->build(self::TAG_SCRIPT, $js, $this->scriptPath);
         return $this;
     }
 
